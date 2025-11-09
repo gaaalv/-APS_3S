@@ -212,7 +212,6 @@ double tempo_countingSort(int arr[], int n) {
             maxValue = arr[i];
         }
     }
-    printf("maxValue encontrado: %d\n", maxValue);
     countingSort(arr, n, maxValue);
     // --- Fim da Ação ---
 
