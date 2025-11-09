@@ -1,12 +1,16 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+/*o bloco de código abaixo se trata de uma compilação condicional onde se o código estiver sendo compilado
+numa máquina WINDOWS, ele realizará a primeira parte (o include da biblioteca windows.h), agora senão estiver
+realizará a segunda.*/
 #ifdef _WIN32
 	#include <windows.h>
 #else
 	#include <time.h>
 #endif
 
+//function feita para abrir o arquivo com os parametros solicitados, criar um array para comportar os dados desse arquivo, e retornar esse array.
 int* carregar_dados(int qty, char* txt) {
 	
 	int* array_dados = (int *) malloc(qty * sizeof(int));
@@ -25,7 +29,7 @@ int* carregar_dados(int qty, char* txt) {
 	
 	int i = 0;
 	while(fgets(valor_puxado, sizeof(valor_puxado), arquivo) != NULL) {
-		if (i < qty) array_dados[i++] = atoi(valor_puxado);
+		if (i < qty) array_dados[i++] = atoi(valor_puxado); //atoi para converter as Strings do arquivo em int.
 		else break;
 	}
 	
@@ -34,6 +38,7 @@ int* carregar_dados(int qty, char* txt) {
 	return array_dados;
 }
 
+//function com a ordenação CoutingSort.
 void countingSort(int arr[], int n, int maxValue) {
     int *count = NULL;
     int *output = NULL;
@@ -62,6 +67,7 @@ void countingSort(int arr[], int n, int maxValue) {
     free(output);
 }
 
+//functions com a ordenação HeapSort.
 void heapify(int arr[], int n, int i) {
     int largest, l, r, temp;
     largest = i;
@@ -90,6 +96,7 @@ void heapSort(int arr[], int n) {
     }
 }
 
+//functions com a ordenação MergeSort.
 void merge(int arr[], int l, int m, int r) {
     int i, j, k;
     int n1, n2;
@@ -132,16 +139,17 @@ void mergeSort(int arr[], int l, int r) {
     }
 }
 
+//functions para conseguir calcular o tempo de execução de cada algoritmo de ordenação.
 double tempo_mergeSort(int arr[], int n) {
     printf("Iniciando Merge Sort para %d elementos...\n", n);
     double tempo_total;
 
     #ifdef _WIN32
         LARGE_INTEGER freq, inicio, fim;
-        QueryPerformanceFrequency(&freq);
+        QueryPerformanceFrequency(&freq); //utilizamos QueryPerformanceFrequency() para uma medição de alta precisão importando a biblioteca windows.h.
         QueryPerformanceCounter(&inicio);
     #else
-        clock_t inicio = clock();
+        clock_t inicio = clock(); //caso o programa esteja sendo compilado em outro sistema operacional usa se a biblioteca.h, onde clock() não possui tanta precisão.
     #endif
 
     mergeSort(arr, 0, n - 1); // <-- Ação
@@ -222,15 +230,18 @@ double tempo_countingSort(int arr[], int n) {
 
 int main(int argc, char *argv[]) {
 	
+	//validação para receber o número correto de parâmetros, <nome do exe> <quantidade> <nome_arquivo>.
 	if(argc != 3) {
 		printf("Quantidade de argumentos insuficiente!\n");
 		printf("Uso Correto: %s	<quantidade> <nome_do_arquivo>", argv[0]);
 		return 1;
 	}
 	
+	
 	int qty = atoi(argv[1]);
 	char* nome_arquivo = argv[2];
 	
+	//validação quantidade > 0.
 	if (qty <= 0) {
 		printf("A quantidade nao pode ser igual/inferior a 0!\n");
 		return 1;
@@ -238,6 +249,7 @@ int main(int argc, char *argv[]) {
 
 	printf("Carregando dados para 3 arrays (total de %d elementos)...\n", qty);
 	
+	//os três arrays que serão ordenados.
 	int *teste_merge;
 	int *teste_heap;
 	int *teste_counting;
@@ -246,6 +258,8 @@ int main(int argc, char *argv[]) {
 	teste_heap = carregar_dados(qty, nome_arquivo);
 	teste_counting = carregar_dados(qty, nome_arquivo);
 	
+	
+	//validação caso arquivo não seja encontrado, caso não seja limpar memória.
 	if(teste_counting == NULL || teste_heap == NULL || teste_merge == NULL){
 		printf("Erro fatal ao ler o arquivo ou alocar memoria! Encerrando.\n");
 
@@ -257,6 +271,7 @@ int main(int argc, char *argv[]) {
 	
 	printf("Dados carregados com sucesso.\n\n");
 
+	//variavel para receber o tempo de execução de cada algoritmo de ordenação.
     double tempo_m = tempo_mergeSort(teste_merge, qty);
     double tempo_h = tempo_heapSort(teste_heap, qty);
     double tempo_c = tempo_countingSort(teste_counting, qty);
