@@ -1,0 +1,5 @@
+.\analise 500 txt500.txt
+>> ./analise 5000 txt5000.txt
+>> ./analise 50000 txt50000.txt
+>> ./analise 500000 txt500000.txt
+>> ./analise 5000000 txt5000000.txt
