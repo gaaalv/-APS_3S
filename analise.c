@@ -1,6 +1,11 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <time.h>
+
+#ifdef _WIN32
+	#include <windows.h>
+#else
+	#include <time.h>
+#endif
 
 int* carregar_dados(int qty, char* txt) {
 	
@@ -129,35 +134,69 @@ void mergeSort(int arr[], int l, int r) {
 
 double tempo_mergeSort(int arr[], int n) {
     printf("Iniciando Merge Sort para %d elementos...\n", n);
-    clock_t inicio = clock();
-    
-    mergeSort(arr, 0, n - 1); // <-- Chamada correta com 0 e n-1
-    
-    clock_t fim = clock();
-    double tempo_total = ((double)(fim - inicio)) / CLOCKS_PER_SEC;
-    printf("Tempo do Merge Sort: %f segundos\n\n", tempo_total);
+    double tempo_total;
+
+    #ifdef _WIN32
+        LARGE_INTEGER freq, inicio, fim;
+        QueryPerformanceFrequency(&freq);
+        QueryPerformanceCounter(&inicio);
+    #else
+        clock_t inicio = clock();
+    #endif
+
+    mergeSort(arr, 0, n - 1); // <-- Ação
+
+    #ifdef _WIN32
+        QueryPerformanceCounter(&fim);
+        tempo_total = (double)(fim.QuadPart - inicio.QuadPart) / (double)freq.QuadPart;
+    #else
+        clock_t fim = clock();
+        tempo_total = ((double)(fim - inicio)) / CLOCKS_PER_SEC;
+    #endif
+
+    printf("Tempo do Merge Sort: %.9f segundos\n\n", tempo_total);
     return tempo_total;
 }
 
 double tempo_heapSort(int arr[], int n) {
     printf("Iniciando Heap Sort para %d elementos...\n", n);
-    clock_t inicio = clock();
+    double tempo_total;
+
+    #ifdef _WIN32
+        LARGE_INTEGER freq, inicio, fim;
+        QueryPerformanceFrequency(&freq);
+        QueryPerformanceCounter(&inicio);
+    #else
+        clock_t inicio = clock();
+    #endif
+
+    heapSort(arr, n); // <-- Ação
+
+    #ifdef _WIN32
+        QueryPerformanceCounter(&fim);
+        tempo_total = (double)(fim.QuadPart - inicio.QuadPart) / (double)freq.QuadPart;
+    #else
+        clock_t fim = clock();
+        tempo_total = ((double)(fim - inicio)) / CLOCKS_PER_SEC;
+    #endif
     
-    heapSort(arr, n); // <-- Chamada correta com n
-    
-    clock_t fim = clock();
-    double tempo_total = ((double)(fim - inicio)) / CLOCKS_PER_SEC;
-    printf("Tempo do Heap Sort: %f segundos\n\n", tempo_total);
+    printf("Tempo do Heap Sort: %.9f segundos\n\n", tempo_total);
     return tempo_total;
 }
 
 double tempo_countingSort(int arr[], int n) {
     printf("Iniciando Counting Sort para %d elementos...\n", n);
-    
-    // O cronômetro começa ANTES do cálculo do maxValue
-    clock_t inicio = clock(); 
+    double tempo_total;
 
-    // PASSO 1: Encontrar o maxValue (custo obrigatório do algoritmo)
+    #ifdef _WIN32
+        LARGE_INTEGER freq, inicio, fim;
+        QueryPerformanceFrequency(&freq);
+        QueryPerformanceCounter(&inicio);
+    #else
+        clock_t inicio = clock();
+    #endif
+    
+    // --- Ação (find maxValue + sort) ---
     printf("Calculando maxValue...\n");
     int maxValue = 0;
     for (int i = 0; i < n; i++) {
@@ -165,14 +204,19 @@ double tempo_countingSort(int arr[], int n) {
             maxValue = arr[i];
         }
     }
+    printf("maxValue encontrado: %d\n", maxValue);
+    countingSort(arr, n, maxValue);
+    // --- Fim da Ação ---
 
-    // PASSO 2: Ordenar
-    countingSort(arr, n, maxValue); 
-    
-    clock_t fim = clock();
-    double tempo_total = ((double)(fim - inicio)) / CLOCKS_PER_SEC;
-    
-    printf("Tempo do Counting Sort: %f segundos\n\n", tempo_total);
+    #ifdef _WIN32
+        QueryPerformanceCounter(&fim);
+        tempo_total = (double)(fim.QuadPart - inicio.QuadPart) / (double)freq.QuadPart;
+    #else
+        clock_t fim = clock();
+        tempo_total = ((double)(fim - inicio)) / CLOCKS_PER_SEC;
+    #endif
+
+    printf("Tempo do Counting Sort: %.9f segundos\n\n", tempo_total);
     return tempo_total;
 }
 
@@ -205,7 +249,7 @@ int main(int argc, char *argv[]) {
 	if(teste_counting == NULL || teste_heap == NULL || teste_merge == NULL){
 		printf("Erro fatal ao ler o arquivo ou alocar memoria! Encerrando.\n");
 
-        if(teste_merge) free(teste_merge);
+        if(teste_merge) free(teste_merge);	
         if(teste_heap) free(teste_heap);
         if(teste_counting) free(teste_counting);
 		return 1;
@@ -233,5 +277,6 @@ int main(int argc, char *argv[]) {
 	free(teste_merge);
 	
 	printf("Concluido.\n");
+	printf("----------------------------------------\n");
 	return 0;
 }
