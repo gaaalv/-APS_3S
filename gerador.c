@@ -4,7 +4,7 @@
 
 int main(int argc, char *argv[]) {
 
-	//validaÃ§Ã£o para receber o nÃºmero correto de parÃ¢metros, <nome do exe> <quantidade> <nome_arquivo>.
+	//validação para receber o número correto de parametros, <nome do exe> <quantidade> <nome_arquivo>.
 	if(argc != 3) {
 		printf("Quantidade de argumentos insuficiente!\n");
 		printf("Uso Correto: %s	<quantidade> <nome_do_arquivo>", argv[0]);
@@ -14,7 +14,7 @@ int main(int argc, char *argv[]) {
 	int qty = atoi(argv[1]);
 	char* nome_arquivo = argv[2];
 
-	//validaÃ§Ã£o quantidade > 0.
+	//validação quantidade > 0.
 	if (qty <= 0) {
 		printf("A quantidade nao pode ser igual/inferior a 0!\n");
 		return 1;
@@ -22,7 +22,7 @@ int main(int argc, char *argv[]) {
 	
 	FILE *arquivo = fopen(nome_arquivo, "w+");
 
-	//validaÃ§Ã£o caso arquivo nÃ£o seja encontrado, caso nÃ£o seja limpar memÃ³ria.
+	//validação caso arquivo não seja encontrado, caso não seja limpar memoria.
 	if(arquivo == NULL){
 		printf("Erro ao criar o arquivo solicitado!\n");
 		return 1;
