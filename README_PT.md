@@ -69,7 +69,7 @@ O fluxo de trabalho é gerar um arquivo e depois analisá-lo.
 
 ```
 
-##### 3. Execução dos arquivos da APS
+#### 3. Execução dos arquivos da APS
 Para os testes oficiais do trabalho (até 5 milhões de elementos):
 
 ```bash
