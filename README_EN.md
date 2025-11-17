@@ -52,3 +52,67 @@ gcc gerador.c -o gerador -std=c11
 
 # 2. Compile the analysis system
 gcc analise.c -o analise -std=c11
+
+```
+
+#### 2. Execution
+The workflow consists of generating a file and then analyzing it.
+
+```bash
+# Example with 10,000 elements
+
+# 1. Generate the test file
+./gerador 10000 data_10k.txt
+
+# 2. Run the analysis on the generated file
+./analise 10000 data_10k.txt
+
+```
+
+#### 3. Running the APS Files
+For the official tests required by the assignment (up to 5 million elements):
+
+```bash
+# Generate the files
+./gerador 500 data_500.txt
+./gerador 5000 data_5k.txt
+./gerador 50000 data_50k.txt
+./gerador 500000 data_500k.txt
+./gerador 5000000 data_5M.txt
+
+# Analyze a large file
+./analise 5000000 data_5M.txt
+
+```
+
+#### Output Example
+When running the analysis program, the output will look similar to this:
+```bash
+$ ./analise 10000 dados_10k.txt
+
+Carregando dados para 3 arrays (total de 10000 elementos)...
+Dados carregados com sucesso.
+
+Iniciando Merge Sort para 10000 elementos...
+Tempo do Merge Sort: 0.001523400 segundos
+
+Iniciando Heap Sort para 10000 elementos...
+Tempo do Heap Sort: 0.001987600 segundos
+
+Iniciando Counting Sort para 10000 elementos...
+(Pode falhar aqui ou demorar muito devido à alocação de memória)
+Tempo do Counting Sort: 2.345678900 segundos
+
+=======================================
+--- Resumo da Analise ---
+Arquivo: dados_10k.txt (10000 elementos)
+---------------------------------------
+Merge Sort:     0.001523400 s
+Heap Sort:      0.001987600 s
+Counting Sort:  2.345678900 s
+=======================================
+
+Liberando memoria...
+Concluido.
+
+```
